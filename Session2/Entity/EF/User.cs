@@ -8,6 +8,13 @@ namespace Session2.Entity.EF
 
     public partial class User
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public User()
+        {
+            Logs = new HashSet<Log>();
+            Tickets = new HashSet<Ticket>();
+        }
+
         public int ID { get; set; }
 
         public int RoleID { get; set; }
@@ -34,8 +41,14 @@ namespace Session2.Entity.EF
 
         public bool? Active { get; set; }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Log> Logs { get; set; }
+
         public virtual Office Office { get; set; }
 
         public virtual Role Role { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Ticket> Tickets { get; set; }
     }
 }

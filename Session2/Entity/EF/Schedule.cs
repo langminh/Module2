@@ -8,6 +8,12 @@ namespace Session2.Entity.EF
 
     public partial class Schedule
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Schedule()
+        {
+            Tickets = new HashSet<Ticket>();
+        }
+
         public int ID { get; set; }
 
         [Column(TypeName = "date")]
@@ -30,5 +36,8 @@ namespace Session2.Entity.EF
         public virtual Aircraft Aircraft { get; set; }
 
         public virtual Route Route { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Ticket> Tickets { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace Session2.Entity.EF
             Routes = new HashSet<Route>();
             Routes1 = new HashSet<Route>();
         }
-        [Required]
+
         public int ID { get; set; }
 
         public int CountryID { get; set; }

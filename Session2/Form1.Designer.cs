@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtDateTime = new System.Windows.Forms.TextBox();
             this.btnApply = new System.Windows.Forms.Button();
             this.txtFlightNumber = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -56,7 +57,6 @@
             this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.txtDateTime = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -86,6 +86,14 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filter by";
+            // 
+            // txtDateTime
+            // 
+            this.txtDateTime.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.txtDateTime.Location = new System.Drawing.Point(102, 76);
+            this.txtDateTime.Name = "txtDateTime";
+            this.txtDateTime.Size = new System.Drawing.Size(163, 22);
+            this.txtDateTime.TabIndex = 12;
             // 
             // btnApply
             // 
@@ -241,6 +249,7 @@
             this.btnCancel.BackColor = System.Drawing.Color.Red;
             this.btnCancel.Cursor = System.Windows.Forms.Cursors.Default;
             this.btnCancel.Enabled = false;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancel.ForeColor = System.Drawing.Color.White;
             this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
@@ -331,14 +340,6 @@
             // 
             this.Column9.HeaderText = "First class";
             this.Column9.Name = "Column9";
-            // 
-            // txtDateTime
-            // 
-            this.txtDateTime.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.txtDateTime.Location = new System.Drawing.Point(102, 76);
-            this.txtDateTime.Name = "txtDateTime";
-            this.txtDateTime.Size = new System.Drawing.Size(163, 22);
-            this.txtDateTime.TabIndex = 12;
             // 
             // Form1
             // 

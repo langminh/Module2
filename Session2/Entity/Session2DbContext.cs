@@ -9,18 +9,21 @@ namespace Session2.Entity
     public partial class Session2DbContext : DbContext
     {
         public Session2DbContext()
-            : base("name=Session2DbContext")
+            : base("name=Session3DbContext")
         {
         }
 
         public virtual DbSet<Aircraft> Aircrafts { get; set; }
         public virtual DbSet<Airport> Airports { get; set; }
+        public virtual DbSet<CabinType> CabinTypes { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<Crash> Crashs { get; set; }
+        public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<Office> Offices { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Route> Routes { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        public virtual DbSet<Ticket> Tickets { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -46,6 +49,11 @@ namespace Session2.Entity
                 .HasForeignKey(e => e.ArrivalAirportID)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<CabinType>()
+                .HasMany(e => e.Tickets)
+                .WithRequired(e => e.CabinType)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<Country>()
                 .HasMany(e => e.Airports)
                 .WithRequired(e => e.Country)
@@ -55,6 +63,10 @@ namespace Session2.Entity
                 .HasMany(e => e.Offices)
                 .WithRequired(e => e.Country)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Log>()
+                .Property(e => e.Description)
+                .IsUnicode(false);
 
             modelBuilder.Entity<Role>()
                 .HasMany(e => e.Users)
@@ -73,6 +85,16 @@ namespace Session2.Entity
             modelBuilder.Entity<Schedule>()
                 .Property(e => e.EconomyPrice)
                 .HasPrecision(19, 4);
+
+            modelBuilder.Entity<Schedule>()
+                .HasMany(e => e.Tickets)
+                .WithRequired(e => e.Schedule)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.Tickets)
+                .WithRequired(e => e.User)
+                .WillCascadeOnDelete(false);
         }
     }
 }

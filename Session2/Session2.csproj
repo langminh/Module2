@@ -62,13 +62,16 @@
     <Compile Include="Entity\Dao\FlightDao.cs" />
     <Compile Include="Entity\EF\Aircraft.cs" />
     <Compile Include="Entity\EF\Airport.cs" />
+    <Compile Include="Entity\EF\CabinType.cs" />
     <Compile Include="Entity\EF\Country.cs" />
+    <Compile Include="Entity\EF\Crash.cs" />
+    <Compile Include="Entity\EF\Log.cs" />
     <Compile Include="Entity\EF\Office.cs" />
     <Compile Include="Entity\EF\Role.cs" />
     <Compile Include="Entity\EF\Route.cs" />
     <Compile Include="Entity\EF\Schedule.cs" />
     <Compile Include="Entity\Session2DbContext.cs" />
-    <Compile Include="Entity\EF\sysdiagram.cs" />
+    <Compile Include="Entity\EF\Ticket.cs" />
     <Compile Include="Entity\EF\User.cs" />
     <Compile Include="Entity\ViewModel\FlightViewModel.cs" />
     <Compile Include="Form1.cs">

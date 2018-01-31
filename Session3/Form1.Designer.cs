@@ -192,6 +192,7 @@
             this.btnApply.Text = "Apply";
             this.btnApply.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnApply.UseVisualStyleBackColor = true;
+            this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
             // 
             // txtDateReturn
             // 
@@ -284,6 +285,7 @@
             this.cboType.Name = "cboType";
             this.cboType.Size = new System.Drawing.Size(138, 24);
             this.cboType.TabIndex = 5;
+            this.cboType.SelectedIndexChanged += new System.EventHandler(this.cboType_SelectedIndexChanged);
             // 
             // label3
             // 

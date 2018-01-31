@@ -57,9 +57,12 @@
     <Compile Include="Code\ComboboxItem.cs" />
     <Compile Include="Code\CustomData.cs" />
     <Compile Include="Code\DataResult.cs" />
+    <Compile Include="Code\DelegateData.cs" />
+    <Compile Include="Code\Dijktra.cs" />
     <Compile Include="Entity\Dao\AirportDao.cs" />
     <Compile Include="Entity\Dao\CabinTypeDao.cs" />
     <Compile Include="Entity\Dao\FlightDao.cs" />
+    <Compile Include="Entity\Dao\TicketDao.cs" />
     <Compile Include="Entity\EF\Aircraft.cs" />
     <Compile Include="Entity\EF\Airport.cs" />
     <Compile Include="Entity\EF\CabinType.cs" />
@@ -74,6 +77,7 @@
     <Compile Include="Entity\EF\Ticket.cs" />
     <Compile Include="Entity\EF\User.cs" />
     <Compile Include="Entity\ViewModel\FlightViewModel.cs" />
+    <Compile Include="Entity\ViewModel\TicketViewModel.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

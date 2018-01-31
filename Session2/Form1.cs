@@ -155,21 +155,6 @@ namespace Session2
 
         private void cbxSort_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (cbxSort.SelectedIndex)
-            {
-                case 0:
-                    list = list.OrderByDescending(x => x.DateFlight).ToList();
-                    break;
-                case 1:
-                    list = list.OrderBy(x => x.TimeFlight).ToList();
-                    break;
-                case 2:
-                    list = list.OrderBy(x => x.FirstClass).ToList();
-                    break;
-                default:
-                    list = list.OrderByDescending(x => x.DateFlight).ToList();
-                    break;
-            }
             SetDataToView(list);
         }
 
@@ -197,13 +182,15 @@ namespace Session2
 
         private bool CheckDateValidate(TextBox t)
         {
-            string regex = @"^([0]?[0 - 9] |[1][0 - 2])[.\/ -]([0]?[1 - 9] |[1 | 2][0 - 9] |[3][0 | 1])[.\/-] ([0 - 9]{4}|[0-9]{2})$";
-            var match = new System.Text.RegularExpressions.Regex(regex);
-            if(match.IsMatch(t.Text))
+            try
             {
+                DateTime.Parse(t.Text);
                 return true;
             }
-            return false;
+            catch
+            {
+                return false;
+            }
         }
 
         private void btnApply_Click(object sender, EventArgs e)
@@ -213,27 +200,34 @@ namespace Session2
 
         private void GetFilter()
         {
+            selectFilter filter;
+            filter.filterFrom = false;
+            filter.filterTo = false;
+            filter.filterDate = false;
+            filter.filterFlightNumber = false;
+
             ComboboxItem from = cbxFrom.SelectedItem as ComboboxItem;
             ComboboxItem To = cbxTo.SelectedItem as ComboboxItem;
             if (from.Value != 0)
             {
                 //lọc theo nơi đi
-                list = list.Where(x => (from.Value != 0) ? x.FromID == from.Value : true).ToList();
-
+                list = list.Where(x => (from.Value != 0) ? x.FromID == from.Value : false).ToList();
+                filter.filterFrom = true;
             }
-            else if (To.Value != 0)
+            if (To.Value != 0)
             {
                 //lọc theo nơi đến
-                list = list.Where(x => (To.Value != 0) ? x.ToID == To.Value : true).ToList();
-
+                list = list.Where(x => (To.Value != 0) ? x.ToID == To.Value : false).ToList();
+                filter.filterTo = true;
             }
-            else if(!string.IsNullOrEmpty(txtDateTime.Text))
+            if(!string.IsNullOrEmpty(txtDateTime.Text))
             {
                 //nếu là định dạng ngày
                 if (CheckDateValidate(txtDateTime))
                 {
                     //lọc theo ngày
-                    list = list.Where(x => (!string.IsNullOrEmpty(txtDateTime.Text)) ? x.DateFlight == CompareDate(DateTime.Parse(txtDateTime.Text)) : true).ToList();
+                    list = list.Where(x => (!string.IsNullOrEmpty(txtDateTime.Text)) ? ((x.DateFlight.Year == CompareDate(DateTime.Parse(txtDateTime.Text)).Year) && (x.DateFlight.Month == CompareDate(DateTime.Parse(txtDateTime.Text)).Month) && (x.DateFlight.Day == CompareDate(DateTime.Parse(txtDateTime.Text)).Day)) : false).ToList();
+                    filter.filterDate = true;
                 }
                 else if (!string.IsNullOrEmpty(txtDateTime.Text))
                 {
@@ -242,17 +236,19 @@ namespace Session2
                 }
 
             }
-            else if(!string.IsNullOrEmpty(txtFlightNumber.Text))
+            if(!string.IsNullOrEmpty(txtFlightNumber.Text))
             {
                 //lọc theo số máy bay
-                list = list.Where(x => (!string.IsNullOrEmpty(txtFlightNumber.Text)) ? x.FlightNumber == txtFlightNumber.Text : true).ToList();
+                list = list.Where(x => (!string.IsNullOrEmpty(txtFlightNumber.Text)) ? x.FlightNumber == txtFlightNumber.Text : false).ToList();
+                filter.filterFlightNumber = true;
             }
-            else
+            if(!filter.filterFrom && !filter.filterTo && !filter.filterDate && !filter.filterFlightNumber)
             {
                 list = flightDao.GetAllViewModel();
                 SetDataToView(list);
                 return;
             }
+
             SetDataToView(list);
         }
 

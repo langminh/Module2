@@ -1,5 +1,6 @@
 ﻿using Session3.Code;
 using Session3.Entity.Dao;
+using Session3.Entity.ViewModel;
 using Session3.Views.FlightDetail;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,20 @@ namespace Session3
         private FlightDetail flightDetailOneWay;
         private AirportDao airportDao;
         private CabinTypeDao cabinTypeDao;
+        private List<TicketViewModel> list;
+        private TicketDao dao;
+        private bool enableReturn;
+
+        public event FilterByCabinType filterCabin = null;
+        public event Filter filter = null;
+
+        private struct selectFilter
+        {
+            public bool filterFrom;
+            public bool filterTo;
+            public bool filterDateOut;
+            public bool filterDateReturn;
+        }
 
         public Form1()
         {
@@ -26,12 +41,13 @@ namespace Session3
             airportDao = new AirportDao();
             cabinTypeDao = new CabinTypeDao();
 
+            dao = new TicketDao();
+            list = dao.GetAllFlight();
+
             SetView();
 
-            flightDetailReturn = new FlightDetail(true);
-            flightDetailOneWay = new FlightDetail(false);
-            flightDetailOneWay.Dock = DockStyle.Fill;
-            pnMainLoad.Controls.Add(flightDetailOneWay);
+            flightDetailReturn = new FlightDetail(true, list);
+            
             
         }
 
@@ -98,6 +114,104 @@ namespace Session3
         private void btnExit_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void cboType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private bool CheckDateValidate(TextBox t)
+        {
+            try
+            {
+                DateTime.Parse(t.Text);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private DateTime CompareDate(DateTime begin)
+        {
+            return new DateTime(begin.Year, begin.Month, begin.Day);
+
+        }
+
+        private List<TicketViewModel> GetFilter()
+        {
+            selectFilter filter;
+            filter.filterFrom = false;
+            filter.filterTo = false;
+            filter.filterDateOut = false;
+            filter.filterDateReturn = false;
+
+            ComboboxItem from = cboFrom.SelectedItem as ComboboxItem;
+            ComboboxItem To = cboTo.SelectedItem as ComboboxItem;
+            if (from.Value != 0)
+            {
+                //lọc theo nơi đi
+                list = list.Where(x => (from.Value != 0) ? x.FromID == from.Value : false).ToList();
+                filter.filterFrom = true;
+            }
+            if (To.Value != 0)
+            {
+                //lọc theo nơi đến
+                list = list.Where(x => (To.Value != 0) ? x.ToID == To.Value : false).ToList();
+                filter.filterTo = true;
+            }
+            if (!string.IsNullOrEmpty(txtDateOut.Text))
+            {
+                //nếu là định dạng ngày
+                if (CheckDateValidate(txtDateOut))
+                {
+                    //lọc theo ngày
+                    list = list.Where(x => (!string.IsNullOrEmpty(txtDateOut.Text)) ? ((x.Date.Year == CompareDate(DateTime.Parse(txtDateOut.Text)).Year) && (x.Date.Month == CompareDate(DateTime.Parse(txtDateOut.Text)).Month) && (x.Date.Day == CompareDate(DateTime.Parse(txtDateOut.Text)).Day)) : false).ToList();
+                    filter.filterDateOut = true;
+                }
+                else if (!string.IsNullOrEmpty(txtDateOut.Text))
+                {
+                    MessageBox.Show("Định dạng ngày không hợp lệ!!!", "Lỗi!!!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    
+                }
+
+            }
+            if (!string.IsNullOrEmpty(txtDateReturn.Text) && enableReturn)
+            {
+                //nếu là định dạng ngày
+                if (CheckDateValidate(txtDateReturn))
+                {
+                    //lọc theo ngày
+                    list = list.Where(x => (!string.IsNullOrEmpty(txtDateReturn.Text)) ? ((x.Date.Year == CompareDate(DateTime.Parse(txtDateReturn.Text)).Year) && (x.Date.Month == CompareDate(DateTime.Parse(txtDateReturn.Text)).Month) && (x.Date.Day == CompareDate(DateTime.Parse(txtDateReturn.Text)).Day)) : false).ToList();
+                    filter.filterDateReturn = true;
+                }
+                else if (!string.IsNullOrEmpty(txtDateOut.Text))
+                {
+                    MessageBox.Show("Định dạng ngày không hợp lệ!!!", "Lỗi!!!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                }
+
+            }
+            if (!filter.filterFrom && !filter.filterTo && !filter.filterDateOut && !filter.filterDateReturn)
+            {
+                list = dao.GetAllFlight();
+                return list;
+            }
+            else
+            {
+                return list;
+            }
+        }
+
+        private void btnApply_Click(object sender, EventArgs e)
+        {
+            //List<TicketViewModel> l = GetFilter();
+            //if (filter != null)
+            //{
+            //    filter(this, new DelegateFilter() { list = l });
+            //}
         }
     }
 }

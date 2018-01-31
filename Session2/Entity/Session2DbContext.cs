@@ -9,7 +9,7 @@ namespace Session2.Entity
     public partial class Session2DbContext : DbContext
     {
         public Session2DbContext()
-            : base("name=Session3DbContext")
+            : base("name=Session2DbContext")
         {
         }
 

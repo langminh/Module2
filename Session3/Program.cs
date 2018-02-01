@@ -5,6 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Session3.Entity.Dao;
+using Session3.Entity.EF;
+
 namespace Session3
 {
     static class Program
@@ -17,7 +20,8 @@ namespace Session3
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new Test());
+            //Console.ReadKey();
         }
     }
 }

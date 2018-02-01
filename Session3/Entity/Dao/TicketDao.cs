@@ -33,6 +33,82 @@ namespace Session3.Entity.Dao
             
         }
 
+        //public List<Route> ReData { get; set; }
+        public List<Route> GetListRoute(int fromID, int toID)
+        {
+            List<Route> list = new List<Route>();
+            //List<Route> temp = new List<Route>();
+
+            Route temp = null;
+
+            var from = (from c in dao.Routes where c.DepartureAirportID == fromID select c).ToList();
+            var to = (from c in dao.Routes where c.ArrivalAirportID == toID select c).ToList();
+
+            int i = 0;
+            while (true)
+            {
+                try
+                {
+                    Route route = null;
+                    if (i < from.Count && temp == null)
+                    {
+                        route = from[i];
+                        i++;
+                    }
+                    else if (temp != null)
+                    {
+                        route = temp;
+                    }
+                    //Restart:
+                    foreach (var item in to)
+                    {
+                        if (route.ArrivalAirportID == item.ArrivalAirportID && route.DepartureAirportID == item.DepartureAirportID)
+                        {
+                            list.Add(route);
+                            temp = null;
+                            //ReData.Add(route);
+                        }
+                        else if (route.ArrivalAirportID == item.DepartureAirportID)
+                        {
+                            route = item;
+                            temp = route;
+                            //goto Restart;
+                        }
+                    }
+
+                    if (i >= from.Count + 1)
+                        break;
+                }
+                catch {
+                    break;
+                }
+            }
+            return list;
+        }
+
+        public List<Route> GetListRoute(List<Route> from, List<Route> to)
+        {
+            List<Route> list = new List<Route>();
+            List<Route> temp = new List<Route>();
+            int i = 0;
+            while(i < from.Count)
+            {
+                Route route = from[i];
+                foreach(var item in to)
+                {
+                    if(route.ArrivalAirportID == item.ArrivalAirportID && route.DepartureAirportID == item.DepartureAirportID)
+                    {
+                        list.Add(item);
+                    }
+                    else if(route.DepartureAirportID == item.ArrivalAirportID)
+                    {
+                        route = item;
+                    }
+                }
+                
+            }
+            return list;
+        }
 
         public List<List<Route>> NumberOfStop(int From, int To)
         {

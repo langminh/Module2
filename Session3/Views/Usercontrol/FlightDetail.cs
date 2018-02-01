@@ -9,22 +9,30 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Session3.Entity.ViewModel;
 using Session3.Entity.Dao;
+using Session3.Code;
 
 namespace Session3.Views.FlightDetail
 {
+
     public partial class FlightDetail : UserControl
     {
-        public List<TicketViewModel> list { get; set; }
+        public List<TicketViewModel> l { get; set; }
         Form1 form1;
         private TicketDao dao;
 
-        public FlightDetail(bool isReturn, List<TicketViewModel> list)
+        // Delegate declaration 
+        public delegate void OnButtonClick(string strValue);
+        // Event declaration 
+        public event OnButtonClick btnHandler;
+
+        public FlightDetail(bool isReturn, List<TicketViewModel> list, Form1 form1)
         {
             InitializeComponent();
-            form1 = new Form1();
-            form1.filter += Form1_filter;
+            this.form1 = form1;
+            form1.applyHandler += Form1_applyHandler;
+            form1.priceFilter += Form1_priceFilter;
             dao = new TicketDao();
-            this.list = list;
+            this.l = list;
             if (isReturn)
             {
                 lbName.Text = "Return flight detail";
@@ -33,17 +41,49 @@ namespace Session3.Views.FlightDetail
             {
                 lbName.Text = "Outbound flight detail";
             }
-
-            SetDataToGrid();
+            SetDataToGrid(l, 1);
         }
-
-        private void Form1_filter(object sender, Code.DelegateFilter filter)
+        //switch(cabinType)
+        //    {
+        //        case 1:
+        //            return price;
+        //        case 2:
+        //            return (price * (35/100));
+        //        case 3:
+        //            return (price * ((35 / 100) + (30 / 100)));
+        //        default:
+        //            return price;
+        //    }
+        private void Form1_priceFilter(int cabinType)
         {
-            this.list = filter.list;
-            SetDataToGrid();
+            switch(cabinType)
+            {
+                //Economy Price
+                case 1:
+                    l = l.OrderBy(x => x.CabinPrice).ToList();
+                    break;
+                //Business Price
+                case 2:
+                    l = l.OrderBy(x => x.BussinesPrice).ToList();
+                    break;
+                //First Class Price
+                case 3:
+                    l = l.OrderBy(x => x.FirstClassPrice).ToList();
+                    break;
+                default:
+                    l = l.OrderBy(x => x.CabinPrice).ToList();
+                    break;
+            }
+            SetDataToGrid(l, cabinType);
         }
 
-        private void SetDataToGrid()
+        private void Form1_applyHandler(List<TicketViewModel> value)
+        {
+            this.l = value;
+            SetDataToGrid(l, 1);
+        }
+
+        private void SetDataToGrid(List<TicketViewModel> list,int type)
         {
             if (list.Count > 0)
             {
@@ -58,11 +98,40 @@ namespace Session3.Views.FlightDetail
                     dataGridView1.Rows[i].Cells[2].Value = item.Date.ToString("dd-MM-yyyy");
                     dataGridView1.Rows[i].Cells[3].Value = item.Time.ToString(@"hh\.mm");
                     dataGridView1.Rows[i].Cells[4].Value = item.FlightNumber;
-                    dataGridView1.Rows[i].Cells[5].Value = item.CabinPrice.ToString();
+                    switch(type)
+                    {
+                        case 1:
+                            dataGridView1.Rows[i].Cells[5].Value = item.CabinPrice.ToString();
+                            break;
+                        case 2:
+                            dataGridView1.Rows[i].Cells[5].Value = item.BussinesPrice.ToString();
+                            break;
+                        case 3:
+                            dataGridView1.Rows[i].Cells[5].Value = item.FirstClassPrice.ToString();
+                            break;
+                        default:
+                            dataGridView1.Rows[i].Cells[5].Value = item.CabinPrice.ToString();
+                            break;
+
+                    }
                     dataGridView1.Rows[i].Cells[6].Value = 0;
                     i++;
                 }
             }
+        }
+
+        private void FlightDetail_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ckbDay_CheckedChanged(object sender, EventArgs e)
+        {
+            // Check if event is null 
+            if (btnHandler != null)
+                btnHandler(string.Empty);
+            // Write some text to output 
+            Console.WriteLine("User Control’s Button Click");
         }
     }
 }

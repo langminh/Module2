@@ -24,8 +24,16 @@ namespace Session3
         private TicketDao dao;
         private bool enableReturn;
 
-        public event FilterByCabinType filterCabin = null;
-        public event Filter filter = null;
+
+        // Delegate declaration 
+        public delegate void OnApplyFilter(List<TicketViewModel> value);
+        // Event declaration 
+        public event OnApplyFilter applyHandler;
+
+        // Delegate declaration 
+        public delegate void OnCabinPriceFilter(int cabinType);
+        // Event declaration 
+        public event OnCabinPriceFilter priceFilter;
 
         private struct selectFilter
         {
@@ -33,6 +41,10 @@ namespace Session3
             public bool filterTo;
             public bool filterDateOut;
             public bool filterDateReturn;
+        }
+        public Form1(int i = 0)
+        {
+
         }
 
         public Form1()
@@ -46,9 +58,16 @@ namespace Session3
 
             SetView();
 
-            flightDetailReturn = new FlightDetail(true, list);
-            
-            
+            flightDetailReturn = new FlightDetail(true, list, this);
+            flightDetailOneWay = new FlightDetail(false, list, this);
+            flightDetailOneWay.btnHandler += FlightDetailOneWay_btnHandler;
+            flightDetailOneWay.Dock = DockStyle.Fill;
+            pnMainLoad.Controls.Add(flightDetailOneWay);
+        }
+
+        private void FlightDetailOneWay_btnHandler(string strValue)
+        {
+            MessageBox.Show("Data is send");
         }
 
         private void SetView()
@@ -99,7 +118,7 @@ namespace Session3
 
         private void rdiOneWay_CheckedChanged(object sender, EventArgs e)
         {
-            if(flightDetailReturn != null)
+            if (flightDetailReturn != null)
             {
                 pnMainLoad.Controls.Remove(flightDetailReturn);
                 flightDetailOneWay.Dock = DockStyle.Fill;
@@ -118,7 +137,11 @@ namespace Session3
 
         private void cboType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+            ComboboxItem item = cboType.SelectedItem as ComboboxItem;
+            if(priceFilter != null)
+            {
+                priceFilter(item.Value);
+            }
         }
 
         private bool CheckDateValidate(TextBox t)
@@ -137,10 +160,9 @@ namespace Session3
         private DateTime CompareDate(DateTime begin)
         {
             return new DateTime(begin.Year, begin.Month, begin.Day);
-
         }
 
-        private List<TicketViewModel> GetFilter()
+        public List<TicketViewModel> GetFilter()
         {
             selectFilter filter;
             filter.filterFrom = false;
@@ -174,7 +196,7 @@ namespace Session3
                 else if (!string.IsNullOrEmpty(txtDateOut.Text))
                 {
                     MessageBox.Show("Định dạng ngày không hợp lệ!!!", "Lỗi!!!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    
+
                 }
 
             }
@@ -207,11 +229,11 @@ namespace Session3
 
         private void btnApply_Click(object sender, EventArgs e)
         {
-            //List<TicketViewModel> l = GetFilter();
-            //if (filter != null)
-            //{
-            //    filter(this, new DelegateFilter() { list = l });
-            //}
+            List<TicketViewModel> l = GetFilter();
+            if(applyHandler != null)
+            {
+                applyHandler(l);
+            }
         }
     }
 }

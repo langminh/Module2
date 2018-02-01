@@ -37,8 +37,8 @@
             this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.lbName = new System.Windows.Forms.Label();
             this.ckbDay = new System.Windows.Forms.CheckBox();
+            this.lbName = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -109,15 +109,6 @@
             this.panel1.Size = new System.Drawing.Size(910, 29);
             this.panel1.TabIndex = 2;
             // 
-            // lbName
-            // 
-            this.lbName.AutoSize = true;
-            this.lbName.Location = new System.Drawing.Point(4, 4);
-            this.lbName.Name = "lbName";
-            this.lbName.Size = new System.Drawing.Size(45, 16);
-            this.lbName.TabIndex = 0;
-            this.lbName.Text = "label1";
-            // 
             // ckbDay
             // 
             this.ckbDay.AutoSize = true;
@@ -127,6 +118,16 @@
             this.ckbDay.TabIndex = 1;
             this.ckbDay.Text = "Display three days befor and after";
             this.ckbDay.UseVisualStyleBackColor = true;
+            this.ckbDay.CheckedChanged += new System.EventHandler(this.ckbDay_CheckedChanged);
+            // 
+            // lbName
+            // 
+            this.lbName.AutoSize = true;
+            this.lbName.Location = new System.Drawing.Point(4, 4);
+            this.lbName.Name = "lbName";
+            this.lbName.Size = new System.Drawing.Size(45, 16);
+            this.lbName.TabIndex = 0;
+            this.lbName.Text = "label1";
             // 
             // panel2
             // 
@@ -144,9 +145,10 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FlightDetail";
             this.Size = new System.Drawing.Size(910, 185);
+            this.Load += new System.EventHandler(this.FlightDetail_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
